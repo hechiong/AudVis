@@ -1,0 +1,16 @@
+{
+  "type": "web",
+  "file": "index.html",
+  "description": "..",
+  "general": {
+    "properties": {
+       "rainbow_glowEnabled": {
+         "order": 117,
+         "text": "Enable glow",
+         "type": "bool",
+         "value": true
+       }
+    },
+    "supportsaudioprocessing": true
+  }
+}

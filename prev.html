@@ -1,0 +1,205 @@
+<!-- this visualizer exists to convey the ideal
+     performance I want the visualizer to perform -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>AudVis</title>
+        <style>
+            body {
+                width: 100vw;
+                height: 100vh;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+                background: black;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
+
+            #bodyFrame {
+                width: 100vw;
+                height: 100vh;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+                position: absolute;
+                /*box-shadow: inset 0 0 1000px #FFB420;
+                animation: frameChange 10s linear infinite alternate;*/
+            }
+
+            .circle {
+                width: 600px;
+                height: 600px;
+                border-radius: 100%;
+                position: absolute;
+                top: 240px; /* 240 & 660 */
+                left: 660px;
+                /*box-shadow: inset 20px 0 50px #fff,
+                            inset -20px 0 50px #000,
+                            inset 20px 0 80px #f0f,
+                            inset -20px 0 80px #0ff,
+                            inset 20px 0 300px #f0f,
+                            inset -20px 0 300px #0ff,
+                            10px 0 50px #fff,
+                            -10px 0 50px #000,
+                            -10px 0 80px #f0f,
+                            10px 0 80px #0ff;
+                animation: circleChange 10s linear infinite alternate;*/
+            }
+/*
+            .orbit {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                position: absolute;
+                top: 285px;
+                left: 285px;
+                background-color: #FFF;
+                box-shadow: 0 5px 50px 25px #FFF,
+                            0 -5px 50px 25px #000,
+                            0 0 40px 20px #F0F,
+                            0 0 100px 50px #0FF;
+                animation: orbitChange 10s linear infinite;
+            }
+
+            @keyframes frameChange {
+                17% {box-shadow: inset 0 0 1000px #20FFB4;}
+                33% {box-shadow: inset 0 0 1000px #B420FF;}
+                50% {box-shadow: inset 0 0 1000px #B4FF20;}
+                67% {box-shadow: inset 0 0 1000px #20B4FF;}
+                83% {box-shadow: inset 0 0 1000px #FF20B4;}
+            }
+
+            @keyframes circleChange {
+                33% {box-shadow: inset 20px 0 50px #fff,
+                                 inset -20px 0 50px #000,
+                                 inset 20px 0 80px #0ff,
+                                 inset -20px 0 80px #ff0,
+                                 inset 20px 0 300px #0ff,
+                                 inset -20px 0 300px #ff0,
+                                 10px 0 50px #fff,
+                                 -10px 0 50px #000,
+                                 -10px 0 80px #0ff,
+                                 10px 0 80px #ff0;}
+                67% {box-shadow: inset 20px 0 50px #fff,
+                                 inset -20px 0 50px #000,
+                                 inset 20px 0 80px #ff0,
+                                 inset -20px 0 80px #f0f,
+                                 inset 20px 0 300px #ff0,
+                                 inset -20px 0 300px #f0f,
+                                 10px 0 50px #fff,
+                                 -10px 0 50px #000,
+                                 -10px 0 80px #ff0,
+                                 10px 0 80px #f0f;}
+            }
+
+            @keyframes orbitChange {
+                0% {
+                    transform: rotate(0deg) translateX(450px);
+                    background-color: #FFF;
+                    box-shadow: 0 5px 50px 25px #FFF,
+                                0 0 40px 20px #F0F,
+                                0 0 100px 50px #0FF;
+                }
+                50% {
+                    transform: rotate(180deg) translateX(450px);
+                    background-color: #000;
+                    box-shadow: 0 5px 50px 25px #000,
+                                0 0 40px 20px #F0F,
+                                0 0 100px 50px #0FF;
+                }
+                100% {
+                    transform: rotate(360deg) translateX(450px);
+                    background-color: #FFF;
+                    box-shadow: 0 5px 50px 25px #FFF,
+                                0 0 40px 20px #F0F,
+                                0 0 100px 50px #0FF;
+                }
+            }*/
+        </style>
+        <script>
+            const barThickness = window.innerWidth / 256;
+            const barHeight = 10000;
+            const barPadding = 8;
+
+            window.addEventListener("load", _ => {
+                let audio = [];
+
+                const canvas = document.createElement("canvas");
+                const context = canvas.getContext("2d");
+
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+
+                let time = 0;
+
+                document.body.appendChild(canvas);
+
+                const listener = arr => {
+                    audio = arr;
+                }
+
+                const draw = _ => {
+
+                    function getRandomColor() {
+                        var letters = "0123456789ABCDEF";
+                        var color = "#";
+
+                        if ((time * 100) % 1 == 0) {
+                            for (var i = 0; i < 6; i++) {
+                                color += letters[Math.floor(Math.random() * 16)];
+                            }
+                        }
+                        return color;
+                    }
+
+                    //context.shadowBlur = 50;
+                    //context.shadowColor = "#0ff";
+                    context.fillStyle = "#fff";
+                    context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+                    for (const [i, part] of audio.entries()) {
+                        const x = (i * barThickness) + ((i + 1) * barPadding) - (barPadding / 2)
+                        const y = window.innerHeight / 2
+
+                        const radius = 300;     // Math.sin(time * 5) for changing radius
+                        const angularPosition = x * 2.8125 + time * 1.2;    // 360 / 128 = 2.8125
+                        const xPosition = radius * Math.cos(angularPosition) + 960;
+                        const yPosition = radius * Math.sin(angularPosition) + 540
+
+                        // starting from top then going clockwise (-+ 75)
+                        if (yPosition <= 390 && xPosition > 735 && xPosition <= 1185) {
+                            context.fillRect(xPosition, yPosition, barThickness, -barHeight * part);
+                        }
+                        else if (xPosition >= 1110 && yPosition > 315 && yPosition <= 765) {
+                            context.fillRect(xPosition, yPosition, barHeight * part, barThickness);
+                        }
+                        else if (yPosition >= 690 && xPosition > 735 && xPosition <= 1185) {
+                            context.fillRect(xPosition, yPosition, barThickness, barHeight * part);
+                        }
+                        else if (xPosition <= 810 && yPosition > 315 && yPosition <= 765) {
+                            context.fillRect(xPosition, yPosition, -barHeight * part, barThickness);
+                        }
+                    }
+
+                    requestAnimationFrame(draw);
+                    time += 0.01;
+                }
+
+                window.wallpaperRegisterAudioListener(listener);
+                draw();
+            });
+        </script>
+    </head>
+    <body>
+        <div id="bodyFrame">
+            <div class="circle">
+                <!--div class="orbit"></div-->
+            </div>
+        </div>
+    </body>
+</html>
